@@ -1,0 +1,342 @@
+             DBMS QUERIES FOR PROJECT 'RAILWAYS MANAGEMENT SYSTEM'
+
+
+-SELECT * FROM Passenger;
+
+-SELECT * FROM Train_Details;
+
+-SELECT * FROM Train_Types;
+
+-SELECT * FROM Station;
+
+-SELECT * FROM Schedule;
+
+-SELECT * FROM Reservation;
+
+-SELECT * FROM Payment;
+
+-SELECT * FROM Cargo;
+
+-SELECT * FROM Food;
+
+-SELECT * FROM Types_of_Seating;
+
+-SELECT * FROM Coaches;
+
+-SELECT * FROM Complaint;
+
+-SELECT * FROM Employee_Details;
+
+-SELECT * FROM Enquiry;
+
+-SELECT * FROM Running_Status;
+
+Q)Which male passengers are listed in the database?
+-SELECT * FROM Passenger WHERE Gender = 'Male';
+
+Q)Which female passengers are listed in the database?
+-SELECT * FROM Passenger WHERE Gender = 'Female';
+
+Q)Which passengers are older than 40 years?
+-SELECT * FROM Passenger WHERE Age > 40;
+
+Q)What are the names and types of all trains available?
+-SELECT Train_Name, Train_Type_Name FROM Train_Details
+JOIN Train_Types ON Train_Details.Train_Type_ID = Train_Types.Train_Type_ID;
+
+Q)Which passengers have made reservations?
+-SELECT Name FROM Passenger
+JOIN Reservation ON Passenger.Passenger_ID = Reservation.Passenger_ID;
+
+Q)How many total passengers are there in the database?
+-SELECT COUNT(*) AS Total_Passengers FROM Passenger;
+
+Q)How many total trains are listed in the database?
+-SELECT COUNT(*) AS Total_Trains FROM Train_Details;
+
+Q)Which passengers have reserved tickets for the 'Kerala Express' train?
+-SELECT Name FROM Passenger
+JOIN Reservation ON Passenger.Passenger_ID = Reservation.Passenger_ID
+JOIN Train_Details ON Reservation.Train_ID = Train_Details.Train_ID
+WHERE Train_Name = 'Kerala Express';
+
+Q)What is the schedule of all trains ordered by their arrival time?
+-SELECT * FROM Schedule ORDER BY Arrival_Time;
+
+Q)How many reservations have been made for each train?
+-SELECT Train_ID, COUNT(*) AS Total_Reservations FROM Reservation GROUP BY Train_ID;
+
+Q)What is the highest payment amount recorded?
+-SELECT MAX(Amount) AS Highest_Payment FROM Payment;
+
+Q)What is the lowest payment amount recorded?
+-SELECT MIN(Amount) AS Lowest_Payment FROM Payment;
+
+Q)What is the total revenue generated from all payments?
+-SELECT SUM(Amount) AS Total_Revenue FROM Payment;
+
+Q)Which unique passengers have made payments for their reservations?
+-SELECT DISTINCT Name FROM Passenger
+JOIN Reservation ON Passenger.Passenger_ID = Reservation.Passenger_ID
+JOIN Payment ON Reservation.Reservation_ID = Payment.Reservation_ID;
+
+Q)How many passengers have reserved tickets for each train?
+-SELECT Train_ID, COUNT(Passenger_ID) AS Passenger_Count FROM Reservation GROUP BY Train_ID;
+
+Q)What is the most expensive food item available?
+-SELECT * FROM Food ORDER BY Price DESC LIMIT 1;
+
+Q)What is the cheapest food item available?
+-SELECT * FROM Food ORDER BY Price ASC LIMIT 1;
+
+Q)Which food items are currently available for purchase?
+-SELECT * FROM Food WHERE Availability_Status = 'Available';
+
+Q)Which trains have a coach with seat type 'ST001'?
+-SELECT DISTINCT Train_ID FROM Coaches WHERE Seat_Type_ID = 'ST001';
+
+Q)Which trains have a delay status indicating they are running late?
+-SELECT * FROM Running_Status WHERE Delay_Status LIKE '%Late%';
+
+
+Q)Which passengers have filed complaints?
+-SELECT DISTINCT Name FROM Passenger
+JOIN Complaint ON Passenger.Passenger_ID = Complaint.Passenger_ID;
+
+Q)How many complaints have been registered for each train?
+-SELECT Train_ID, COUNT(*) AS Total_Complaints FROM Complaint GROUP BY Train_ID;
+
+Q)Which trains originate from station ID 'S001'?
+-SELECT * FROM Train_Details WHERE Origin_Station_ID = 'S001';
+
+Q)Which trains have their final destination at station ID 'S002'?
+-SELECT * FROM Train_Details WHERE Destination_Station_ID = 'S002';
+
+Q)Which employees are assigned to station ID 'S004'?
+-SELECT * FROM Employee_Details WHERE Station_ID = 'S004';
+
+Q)What is the total cargo weight carried by each train?
+-SELECT Train_ID, SUM(Weight) AS Total_Weight FROM Cargo GROUP BY Train_ID;
+
+Q)Which trains have successfully delivered cargo?
+-SELECT DISTINCT Train_ID FROM Cargo WHERE Delivery_Status = 'Delivered';
+
+Q)How many customer inquiries are still pending response?
+-SELECT COUNT(*) AS Pending_Enquiries FROM Enquiry WHERE Response_Status = 'Pending';
+
+Q)Which employees work in the 'Operations' department?
+-SELECT * FROM Employee_Details WHERE Department = 'Operations';
+
+Q)Which trains have complaints related to delays?
+-SELECT DISTINCT Train_ID FROM Complaint WHERE Complaint_Type = 'Delayed Train';
+
+Q)Which passengers have made reservations but have not completed a payment?
+-SELECT Name FROM Passenger
+JOIN Reservation ON Passenger.Passenger_ID = Reservation.Passenger_ID
+LEFT JOIN Payment ON Reservation.Reservation_ID = Payment.Reservation_ID
+WHERE Payment.Payment_ID IS NULL;
+
+Q)Which coaches belong to the 'Executive' class?
+-SELECT * FROM Coaches WHERE Coach_Type = 'Executive';
+
+Q)What are the coach IDs and total seats available in each coach?
+-SELECT Coach_ID, Total_Seats FROM Coaches;
+
+Q)What is the total revenue generated per train from payments in the 'PaymentEPP' table?
+-SELECT Train_ID, SUM(Amount) AS Total_Revenue FROM PaymentEPP
+JOIN Reservation ON Payment.Reservation_ID = Reservation.Reservation_ID
+GROUP BY Train_ID;
+
+Q)What is the average age of all passengers?
+-SELECT AVG(Age) AS Average_Age FROM Passenger;
+
+Q)Which trains have the highest number of reservations?
+-SELECT Train_ID, COUNT(Passenger_ID) AS Passenger_Count FROM Reservation GROUP BY Train_ID ORDER BY Passenger_Count DESC;
+
+Q)Which trains have generated the highest revenue from ticket payments?
+-SELECT Train_ID, SUM(Amount) AS Total_Revenue FROM Payment
+JOIN Reservation ON Payment.Reservation_ID = Reservation.Reservation_ID
+GROUP BY Train_ID ORDER BY Total_Revenue DESC;
+
+Q)How many employees work in each department, sorted by the highest count?
+-SELECT Department, COUNT(*) AS Total_Employees FROM Employee_Details GROUP BY Department ORDER BY Total_Employees DESC;
+
+Q)How many employees work in each department, sorted in descending order?
+-SELECT Department, COUNT(*) AS Total_Employees FROM Employee_Details GROUP BY Department ORDER BY Total_Employees DESC;
+
+
+Q)What are the reservation details for all passengers, including seat and coach information?
+-SELECT p.Name, r.Reservation_ID, r.Train_ID, r.Reservation_Date, r.Seat_Number, r.Coach_ID
+FROM Passenger p
+JOIN Reservation r ON p.Passenger_ID = r.Passenger_ID;
+
+Q)How many reservations have been made per train?
+-SELECT Train_ID, COUNT(*) AS Reservation_Count
+FROM Reservation
+GROUP BY Train_ID;
+
+Q)What is the total count of male and female passengers?
+-SELECT Gender, COUNT(*) AS Count
+FROM Passenger
+GROUP BY Gender;
+
+Q)Which reservations have seat numbers greater than 20?
+-SELECT * FROM Reservation WHERE Seat_Number > 20;
+
+Q)What are the contact details of passengers who have made reservations?
+-SELECT p.Name, p.Contact_Number, p.Email
+FROM Passenger p
+JOIN Reservation r ON p.Passenger_ID = r.Passenger_ID;
+
+Q)Which employees are assigned to delayed trains?
+-SELECT Name, Position, Train_ID 
+FROM Employee 
+WHERE Train_ID IN (SELECT Train_ID FROM Running_Status WHERE Delay_Status <> 'On Time');
+
+Q)Which reservations are for trains with an ID starting with 'T00'?
+-SELECT * FROM Reservation WHERE Train_ID LIKE 'T00%';
+
+Q)Which passengers have names starting with 'A'?
+-SELECT * FROM Passenger WHERE Name LIKE 'A%';
+
+Q)Which reservations were made on or after March 12, 2025?
+-SELECT * FROM Reservation WHERE Reservation_Date >= '2025-03-12';
+
+Q)What is the total amount collected from all payments?
+-SELECT SUM(Amount) AS Total_Amount FROM Payment;
+
+Q)What are the reservation and payment details for all transactions?
+-SELECT r.Reservation_ID, r.Passenger_ID, r.Train_ID, r.Reservation_Date, p.Amount, p.Payment_Method
+FROM Reservation r
+JOIN Payment p ON r.Reservation_ID = p.Reservation_ID;
+
+Q)How many reservations have been made per train?
+-SELECT Train_ID, COUNT(*) AS Reservation_Count
+FROM Reservation
+GROUP BY Train_ID;
+
+Q)Which reservations have no corresponding payment records?
+-SELECT * FROM Reservation 
+WHERE Payment_ID NOT IN (SELECT Payment_ID FROM Payment);
+
+Q)What is the highest recorded payment amount?
+-SELECT * FROM Payment 
+ORDER BY Amount DESC 
+LIMIT 1;
+
+Q)What is the total number of reservations made?
+-SELECT COUNT(*) AS Total_Reservations FROM Reservation;
+
+Q)What are the train names and types available in the system?
+-SELECT t.Train_Name, tt.Train_Type_Name
+FROM Train_Details t
+JOIN Train_Types tt ON t.Train_Type_ID = tt.Train_Type_ID;
+
+Q)Which trains have 'S012' as their destination station?
+-SELECT * FROM Train_Details WHERE Destination_Station_ID = 'S012';
+
+Q)Which trains have 'Express' in their name?
+-SELECT * FROM Train_Details WHERE Train_Name LIKE '%Express%';
+
+Q)Which passengers have reserved tickets for train ID 'T001'?
+-SELECT Name 
+FROM Passenger 
+WHERE Passenger_ID IN (SELECT Passenger_ID FROM Reservation WHERE Train_ID = 'T001');
+
+Q)Which train stops at station ID 'S001' according to the schedule?
+-SELECT Train_Name 
+FROM Train_Details 
+WHERE Train_ID IN (SELECT Train_ID FROM Schedule WHERE Station_ID = 'S001');
+
+Q)Which payment record has the highest amount?
+-SELECT * FROM Payment 
+WHERE Amount = (SELECT MAX(Amount) FROM Payment);
+
+Q)Who is the oldest passenger who has made a reservation?
+-SELECT * FROM Passenger 
+WHERE Age = (SELECT MAX(Age) FROM Passenger WHERE Passenger_ID IN (SELECT Passenger_ID FROM Reservation));
+
+Q)What food items are available on the train reserved by passenger ID 'P003'?
+-SELECT Food_Item 
+FROM Food 
+WHERE Train_ID = (SELECT Train_ID FROM Reservation WHERE Passenger_ID = 'P003');
+
+Q)Which train is reserved by the passenger named 'Rajesh Kumar'?
+-SELECT Train_Name 
+FROM Train_Details 
+WHERE Train_ID = (
+    SELECT Train_ID 
+    FROM Reservation 
+    WHERE Passenger_ID = (
+        SELECT Passenger_ID 
+        FROM Passenger 
+        WHERE Name = 'Rajesh Kumar'
+    )
+);
+
+Q)Find the train names that have a seating type of 'AC 3-Tier'.
+-SELECT Train_Name 
+FROM Train_Details 
+WHERE Train_ID IN (
+    SELECT Train_ID 
+    FROM Coaches 
+    WHERE Seat_Type_ID = (
+        SELECT Seat_Type_ID FROM Seating_Types WHERE Seat_Type_Name = 'AC 3-Tier'
+    )
+);
+
+Q)Get the names of passengers who have made a payment of more than 1500.
+-SELECT Name 
+FROM Passenger 
+WHERE Passenger_ID IN (
+    SELECT Passenger_ID 
+    FROM Reservation 
+    WHERE Reservation_ID IN (
+        SELECT Reservation_ID 
+        FROM Payment 
+        WHERE Amount > 1500
+    )
+);
+
+Q)Find the train names that have cargo of type 'Electronics'.
+-SELECT Train_Name 
+FROM Train_Details 
+WHERE Train_ID IN (
+    SELECT Train_ID 
+    FROM Cargo 
+    WHERE Cargo_Type = 'Electronics'
+);
+
+Q)Find the names of passengers who have made a complaint about seat issues.
+-SELECT Name 
+FROM Passenger 
+WHERE Passenger_ID IN (
+    SELECT Passenger_ID 
+    FROM Complaint 
+    WHERE Complaint_Type = 'Seat Issue'
+);
+
+Q)Find all passengers who have filed a complaint but have not received a resolution
+-SELECT Name 
+FROM Passenger 
+WHERE Passenger_ID IN (
+    SELECT Passenger_ID 
+    FROM Complaint 
+    WHERE Status = 'Pending' OR Status = 'In Process'
+);
+
+Q) Get the train details for the train that has the highest number of reservations
+-SELECT Train_ID, Train_Name 
+FROM Train_Details 
+WHERE Train_ID = (
+    SELECT TOP 1 Train_ID 
+    FROM Reservation 
+    GROUP BY Train_ID 
+    ORDER BY COUNT(*) DESC
+);
+
+
+
+
+
+
